@@ -1,7 +1,12 @@
+# Dependencies
 node_modules/
 
+# Build Files
 dist/
 build/
 
-
+# Environment Variables
 .env
+
+# Database
+mongo-db/

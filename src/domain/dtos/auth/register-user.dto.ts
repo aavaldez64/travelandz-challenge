@@ -3,15 +3,15 @@ import { DtoResponse } from "../../interfaces";
 
 export class RegisterUserDto {
   private constructor(
-    public name: string,
+    public username: string,
     public email: string,
     public password: string,
   ) {}
 
   static create(props: Record<string, any>): DtoResponse<RegisterUserDto> {
-    const { name, email, password } = props;
+    const { username, email, password } = props;
 
-    if (!name) return ["name is required"];
+    if (!username) return ["username is required"];
     if (!email) return ["email is required"];
     if (!Validators.isEmail(email)) return ["Invalid email"];
 
@@ -19,7 +19,11 @@ export class RegisterUserDto {
 
     return [
       null,
-      new RegisterUserDto(name, (email as string).toLowerCase(), password),
+      new RegisterUserDto(
+        (username as string).toLowerCase(),
+        (email as string).toLowerCase(),
+        password,
+      ),
     ];
   }
 }
