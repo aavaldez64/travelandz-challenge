@@ -9,7 +9,7 @@ export class AuthMiddleware {
     async (req: Request, res: Response, next: NextFunction) => {
       const authorization = req.header("Authorization");
       if (!authorization)
-        return res.status(401).json({ message: "No token provided" });
+        return res.status(401).json({ message: "Unable to authenticate" });
       if (!authorization.startsWith("Bearer "))
         return res.status(401).json({ message: "Invalid Bearer token" });
 
