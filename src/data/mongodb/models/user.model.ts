@@ -1,4 +1,13 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
+import { Roles } from "../../../domain/entities";
+
+export interface UserInterface extends Document {
+  username: string;
+  email: string;
+  password: string;
+  role: Roles;
+  isActive: boolean;
+}
 
 const userSchema = new Schema(
   {
@@ -14,6 +23,15 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    role: {
+      type: String,
+      default: Roles.user,
+      enum: [Roles.user, Roles.admin],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
@@ -21,4 +39,4 @@ const userSchema = new Schema(
   },
 );
 
-export const UserModel = model("User", userSchema);
+export const UserModel = model<UserInterface>("User", userSchema);

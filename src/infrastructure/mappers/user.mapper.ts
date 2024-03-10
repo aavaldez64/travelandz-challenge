@@ -3,7 +3,8 @@ import { CustomError } from "../../domain/errors";
 
 export class UserMapper {
   static UserEntityFromObject(props: Record<string, any>): UserEntity {
-    const { id, _id, username, email, password } = props;
+    // const { id, _id, username, email, password, isActive } = props;
+    const { id, _id, username, email, isActive, role } = props;
 
     if (!id && !_id) {
       throw CustomError.badRequest("Missing id");
@@ -14,9 +15,10 @@ export class UserMapper {
     if (!email) {
       throw CustomError.badRequest("Missing email");
     }
-    if (!password) {
-      throw CustomError.badRequest("Missing password");
-    }
-    return new UserEntity(id || _id, username, email, password);
+    // if (!password) {
+    //   throw CustomError.badRequest("Missing password");
+    // }
+    // return new UserEntity(id || _id, username, email, password, isActive);
+    return new UserEntity(id || _id, username, email, role, isActive);
   }
 }

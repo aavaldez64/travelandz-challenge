@@ -1,1 +1,1 @@
-export { UserEntity } from "./user.entity";
+export { UserEntity, Roles } from "./user.entity";

@@ -4,9 +4,7 @@ import { UserEntity } from "../../domain/entities";
 import { LoginUserDto, RegisterUserDto } from "../../domain/dtos";
 import { CustomError } from "../../domain/errors";
 import { UserMapper } from "../mappers/user.mapper";
-
-type HashFunction = (password: string, salt?: number) => string;
-type CompareFunction = (password: string, hash: string) => boolean;
+import type { CompareFunction, HashFunction } from "../interfaces";
 
 export class AuthDatasource implements AuthDatasourceInterface {
   constructor(
