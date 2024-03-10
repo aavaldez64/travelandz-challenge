@@ -8,6 +8,10 @@ interface EnvironmentVariables {
   MONGO_DB_NAME: string;
   MONGO_USERNAME: string;
   MONGO_PASSWORD: string;
+
+  HOTEL_BEDS_API_URL: string;
+  HOTEL_BEDS_API_KEY: string;
+  HOTEL_BEDS_X_SIGNATURE: string;
 }
 
 class EnvConfig {
@@ -20,6 +24,10 @@ class EnvConfig {
         MONGO_DB_NAME: joi.string().required(),
         MONGO_USERNAME: joi.string().required(),
         MONGO_PASSWORD: joi.string().required(),
+
+        HOTEL_BEDS_API_URL: joi.string().required(),
+        HOTEL_BEDS_API_KEY: joi.string().required(),
+        HOTEL_BEDS_X_SIGNATURE: joi.string().required(),
       })
       .unknown(true);
 
@@ -29,15 +37,18 @@ class EnvConfig {
       throw new Error(`Environment config validation error: ${error.message}`);
     }
 
-    const environmentVariables: EnvironmentVariables = value;
+    const envVars: EnvironmentVariables = value;
 
     return {
-      PORT: environmentVariables.PORT,
-      JWT_SECRET_KEY: environmentVariables.JWT_SECRET_KEY,
-      MONGO_URL: environmentVariables.MONGO_URL,
-      MONGO_DB_NAME: environmentVariables.MONGO_DB_NAME,
-      MONGO_USERNAME: environmentVariables.MONGO_USERNAME,
-      MONGO_PASSWORD: environmentVariables.MONGO_PASSWORD,
+      PORT: envVars.PORT,
+      JWT_SECRET_KEY: envVars.JWT_SECRET_KEY,
+      MONGO_URL: envVars.MONGO_URL,
+      MONGO_DB_NAME: envVars.MONGO_DB_NAME,
+      MONGO_USERNAME: envVars.MONGO_USERNAME,
+      MONGO_PASSWORD: envVars.MONGO_PASSWORD,
+      HOTEL_BEDS_API_URL: envVars.HOTEL_BEDS_API_URL,
+      HOTEL_BEDS_API_KEY: envVars.HOTEL_BEDS_API_KEY,
+      HOTEL_BEDS_X_SIGNATURE: envVars.HOTEL_BEDS_X_SIGNATURE,
     } as const;
   }
 }
