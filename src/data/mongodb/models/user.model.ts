@@ -2,6 +2,9 @@ import { Document, Schema, model } from "mongoose";
 import { Roles } from "../../../domain/entities";
 
 export interface UserInterface extends Document {
+  name: string;
+  lastName: string;
+  phone: string;
   username: string;
   email: string;
   password: string;
@@ -11,6 +14,18 @@ export interface UserInterface extends Document {
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+    },
+    lastName: {
+      type: String,
+      required: [true, "LastName is required"],
+    },
+    phone: {
+      type: String,
+      required: [true, "Phone is required"],
+    },
     username: {
       type: String,
       required: [true, "Username is required"],

@@ -15,7 +15,7 @@ class FetchAPIAdapter {
       ...options,
     });
   }
-  post(url: string, body: any, options?: RequestInit) {
+  post(url: string, body: any = {}, options?: RequestInit) {
     return fetch(this.getURL(url), {
       method: "POST",
       headers: {

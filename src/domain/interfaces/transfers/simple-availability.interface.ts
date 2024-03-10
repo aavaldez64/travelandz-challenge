@@ -3,7 +3,7 @@ export interface AvailabilityResponse {
   services: Service[];
 }
 
-export interface Search {
+interface Search {
   language: string;
   departure: ComeBack;
   comeBack: ComeBack;
@@ -12,24 +12,24 @@ export interface Search {
   to: From;
 }
 
-export interface ComeBack {
+interface ComeBack {
   date: string;
   time: string;
 }
 
-export interface From {
+interface From {
   code: string;
   description: string;
   type: string;
 }
 
-export interface Occupancy {
+interface Occupancy {
   adults: number;
   children: number;
   infants: number;
 }
 
-export interface Service {
+interface Service {
   id: number;
   direction: string;
   transferType: string;
@@ -46,19 +46,19 @@ export interface Service {
   factsheetId: number;
 }
 
-export interface CancellationPolicy {
+interface CancellationPolicy {
   amount: number;
   from: string;
   currencyId: string;
   isForceMajeure: null;
 }
 
-export interface Category {
+interface Category {
   code: string;
   name: string;
 }
 
-export interface Content {
+interface Content {
   vehicle: Category;
   category: Category;
   images: Image[];
@@ -68,31 +68,31 @@ export interface Content {
   transferRemarks: TransferRemark[];
 }
 
-export interface Image {
+interface Image {
   url: string;
   type: string;
 }
 
-export interface TransferDetailInfo {
+interface TransferDetailInfo {
   id: string;
   name: string;
   description: string;
   type: string;
 }
 
-export interface TransferRemark {
+interface TransferRemark {
   type: string;
   description: string;
   mandatory: boolean;
 }
 
-export interface Link {
+interface Link {
   rel: string;
   href: string;
   method: string;
 }
 
-export interface PickupInformation {
+interface PickupInformation {
   from: From;
   to: From;
   date: string;
@@ -100,7 +100,7 @@ export interface PickupInformation {
   pickup: Pickup;
 }
 
-export interface Pickup {
+interface Pickup {
   address: null;
   number: null;
   town: null;
@@ -115,13 +115,13 @@ export interface Pickup {
   image: any | null;
 }
 
-export interface CheckPickup {
+interface CheckPickup {
   mustCheckPickupTime: boolean;
   url: null;
   hoursBeforeConsulting: null;
 }
 
-export interface Price {
+interface Price {
   totalAmount: number;
   netAmount: null;
   currencyId: string;

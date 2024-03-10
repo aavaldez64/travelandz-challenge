@@ -31,7 +31,8 @@ export class AuthDatasource implements AuthDatasourceInterface {
   }
 
   async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
-    const { username, email, password } = registerUserDto;
+    const { name, lastName, phone, username, email, password } =
+      registerUserDto;
     try {
       const findUser = await UserModel.findOne({
         $or: [{ username }, { email }],
@@ -42,6 +43,9 @@ export class AuthDatasource implements AuthDatasourceInterface {
       }
 
       const user = await UserModel.create({
+        name,
+        lastName,
+        phone,
         username,
         email,
         password: this.hashPassword(password),

@@ -9,10 +9,13 @@ export class TransfersRoutes {
     const controller = new TransfersController();
 
     router.get(
-      "/check-simple-availability",
-      AuthMiddleware.ValidateJWT(Roles.user, Roles.admin),
+      "/check-availability/simple",
       controller.checkSimpleAvailability,
     );
+    router.post("/booking/request", controller.requestBooking);
+    router.get("/booking/", controller.getBookingList);
+    router.get("/booking/:id", controller.getBookingDetails);
+    router.delete("/booking/:id", controller.cancelBooking);
     return router;
   }
 }
