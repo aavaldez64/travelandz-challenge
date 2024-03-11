@@ -5,6 +5,18 @@
 body {
 }
 
+input,
+textarea {
+  @apply p-2 border-2 border-gray-200 font-normal;
+}
+.button {
+  @apply border-2 border-sky-800 disabled:border-sky-800/80
+  bg-sky-800 disabled:bg-sky-800/80 hover:bg-white 
+  font-semibold text-white hover:text-sky-800 
+  p-2 rounded-lg 
+  transition-colors duration-200 ease-in-out;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

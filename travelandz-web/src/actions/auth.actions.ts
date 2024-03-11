@@ -1,7 +1,9 @@
 "use server";
 
+import { TRAVELANDZ_API } from "@/adapters/fetch-api/server";
 import { signIn, signOut } from "@/auth.config";
-import { LoginUserProps } from "@/interfaces";
+import { LoginUserProps, RegisterUserProps } from "@/interfaces";
+import { AuthService } from "@/services";
 
 export async function ActionLogin(credentials: LoginUserProps) {
   return signIn("credentials", {
@@ -13,4 +15,20 @@ export async function ActionLogin(credentials: LoginUserProps) {
 
 export async function ActionLogout() {
   return signOut({ redirect: true, redirectTo: "/" });
+}
+
+export async function ActionRegister(registerUserProps: RegisterUserProps) {
+  const response = await AuthService.register(
+    registerUserProps,
+    TRAVELANDZ_API
+  );
+  console.log(response);
+  if (!response.ok) {
+    throw new Error(response.data.message);
+  }
+  const credentials = {
+    username: registerUserProps.username,
+    password: registerUserProps.password,
+  };
+  return await ActionLogin(credentials);
 }

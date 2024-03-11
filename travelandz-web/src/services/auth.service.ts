@@ -1,8 +1,9 @@
 import { fetchApiAdapter } from "@/adapters/fetch-api/adapter";
-import {
+import type {
   LoginUserProps,
   LoginUserResponse,
   RegisterUserProps,
+  RegisterUserResponse,
 } from "@/interfaces";
 
 export class AuthService {
@@ -19,9 +20,12 @@ export class AuthService {
     registerUserProps: RegisterUserProps,
     fetchApi: fetchApiAdapter
   ) {
-    const response = await fetchApi.post("/auth/register", {
-      data: registerUserProps,
-    });
+    const response = await fetchApi.post<RegisterUserResponse>(
+      "/auth/register",
+      {
+        data: registerUserProps,
+      }
+    );
     return response;
   }
 }

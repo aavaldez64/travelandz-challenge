@@ -6,11 +6,17 @@ interface FetchProps {
   options?: RequestInit | undefined;
 }
 type FetchPropsWithoutBody = Omit<FetchProps, "data">;
-type NextFetchResponse<T> = {
-  ok: boolean;
-  status: number;
-  data: T;
-};
+type NextFetchResponse<T> =
+  | {
+      ok: true;
+      status: number;
+      data: T;
+    }
+  | {
+      ok: false;
+      status: number;
+      data: any;
+    };
 type CookieStore = () => {
   get: (cookieName: string) => { name: string; value: string } | undefined;
 };

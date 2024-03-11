@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   } else {
-    if (url.pathname !== "/")
+    if (url.pathname !== "/" && url.pathname !== "/register")
       return NextResponse.redirect(new URL("/", request.url));
   }
 }

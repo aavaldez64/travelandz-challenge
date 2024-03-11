@@ -25,3 +25,4 @@ export interface RegisterUserProps {
   email: string;
   password: string;
 }
+export interface RegisterUserResponse extends LoginUserResponse {}
