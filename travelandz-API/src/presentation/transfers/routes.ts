@@ -12,7 +12,7 @@ export class TransfersRoutes {
       "/check-availability/simple",
       controller.checkSimpleAvailability,
     );
-    router.post("/booking/request", controller.requestBooking);
+    router.post("/booking/request-simple", controller.requestSimpleBooking);
     router.get("/booking/", controller.getBookingList);
     router.get("/booking/:id", controller.getBookingDetails);
     router.delete("/booking/:id", controller.cancelBooking);

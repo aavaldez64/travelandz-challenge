@@ -20,7 +20,7 @@ $ POST https://api.test.hotelbeds.com/transfer-api/1.0/bookings
       "transferDetails": [
         {
           "type": "FLIGHT",
-          "direction": "ARRIVAL",
+          "direction": "DEPARTURE",
           "code": "XR1234",
           "companyName": "null"
         }

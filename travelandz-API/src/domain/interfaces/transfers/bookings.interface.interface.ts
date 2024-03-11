@@ -6,7 +6,7 @@ export interface Booking {
   reference: string;
   bookingFileId: unknown | null;
   creationDate: string;
-  status: Status;
+  status: BookingStatus;
   modificationsPolicies: ModificationsPolicies;
   holder: Holder;
   transfers: Transfer[];
@@ -21,7 +21,7 @@ export interface Booking {
   links: Link[];
   paymentDataRequired: boolean;
 }
-type Status = "CONFIRMED" | "CANCELLED";
+export type BookingStatus = "CONFIRMED" | "CANCELLED";
 
 export interface Holder {
   name: string;
@@ -52,7 +52,7 @@ export interface Supplier {
 
 export interface Transfer {
   id: number;
-  status: Status;
+  status: BookingStatus;
   transferType: string;
   vehicle: Category;
   category: Category;

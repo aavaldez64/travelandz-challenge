@@ -6,8 +6,8 @@ export class GetBookingsDto {
     public fromDate: string,
     public toDate: string,
     public dateType: string,
-    public offset: string,
-    public limit: string,
+    public page: number,
+    public limit: number,
   ) {}
   static create(props: Record<string, any>): DtoResponse<GetBookingsDto> {
     const errors: string[] = [];
@@ -16,8 +16,8 @@ export class GetBookingsDto {
       fromDate,
       toDate,
       dateType = "FROM_DATE",
-      offset = 0,
-      limit = 20,
+      page = "1",
+      limit = "20",
     } = props;
 
     if (!fromDate) errors.push("fromDate is required");
@@ -28,6 +28,9 @@ export class GetBookingsDto {
     }
     if (new Date(toDate).toDateString() === "Invalid Date") {
       errors.push("Invalid out bound date");
+    }
+    if (page && (isNaN(+page) || +page < 1)) {
+      errors.push("Invalid page");
     }
 
     if (errors.length > 0) {
@@ -42,8 +45,8 @@ export class GetBookingsDto {
         new Date(fromDate).toISOString().split("T").at(0)!,
         new Date(toDate).toISOString().split("T").at(0)!,
         dateType,
-        offset,
-        limit,
+        +page,
+        +limit,
       ),
     ];
   }

@@ -15,36 +15,36 @@ export interface UserInterface extends Document {
 const userSchema = new Schema(
   {
     name: {
-      type: String,
+      type: Schema.Types.String,
       required: [true, "Name is required"],
     },
     lastName: {
-      type: String,
+      type: Schema.Types.String,
       required: [true, "LastName is required"],
     },
     phone: {
-      type: String,
+      type: Schema.Types.String,
       required: [true, "Phone is required"],
     },
     username: {
-      type: String,
+      type: Schema.Types.String,
       required: [true, "Username is required"],
     },
     email: {
-      type: String,
+      type: Schema.Types.String,
       required: [true, "Email is required"],
     },
     password: {
-      type: String,
+      type: Schema.Types.String,
       required: [true, "Password is required"],
     },
     role: {
-      type: String,
+      type: Schema.Types.String,
       default: Roles.user,
       enum: [Roles.user, Roles.admin],
     },
     isActive: {
-      type: Boolean,
+      type: Schema.Types.Boolean,
       default: true,
     },
   },
