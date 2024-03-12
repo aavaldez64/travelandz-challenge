@@ -12,11 +12,10 @@ export interface TransfersAvailabilityProps {
 
   fromType: string;
   fromCode: string;
-  // @ Is required
-  outBound: string; // new Date().toISOString()
-
   toType: string;
   toCode: string;
+
+  outBound: string; // new Date().toISOString()
   inBound?: string; // new Date().toISOString()
 
   adults: number;
@@ -34,4 +33,23 @@ export interface RequestSimpleBookingProps {
 
   // transferCode?: string;
   // transferCompanyName?: string;
+}
+
+export interface AirportCodesResponse {
+  iataCodes: IATACode[];
+}
+export interface IATACode {
+  cityAirport: string;
+  country: string;
+  code: string;
+}
+export interface HotelCodesResponse {
+  data: HotelCode[];
+}
+export interface HotelCode {
+  code: string;
+  name: string;
+  description: string;
+  countryCode: string;
+  city: string;
 }

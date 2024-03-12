@@ -22,7 +22,7 @@ export async function ActionRegister(registerUserProps: RegisterUserProps) {
     registerUserProps,
     TRAVELANDZ_API
   );
-  console.log(response);
+  // console.log(response);
   if (!response.ok) {
     throw new Error(response.data.message);
   }
