@@ -9,7 +9,11 @@
     "build": "rimraf ./dist && tsc",
     "build:start": "pnpm build && pnpm start",
     "format": "prettier --write src",
-    "format:check": "prettier --check src"
+    "format:check": "prettier --check src",
+    "iata-codes": "ts-node src/data/iata-codes/iata-codes.ts",
+    "iata-codes:test": "ts-node src/data/iata-codes/iata-codes.ts --test",
+    "iata-codes:seed": "ts-node src/data/iata-codes/iata-codes.ts --seed",
+    "iata-codes:mongo": "ts-node src/data/iata-codes/iata-codes.ts --mongo"
   },
   "keywords": [
     "travelandz",
@@ -29,6 +33,7 @@
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
     "standard": "17.1.0",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "2.0.0",
     "typescript": "5.4.2"
   },
@@ -40,7 +45,8 @@
     "joi": "17.12.2",
     "jsonwebtoken": "9.0.2",
     "mongoose": "8.2.1",
-    "morgan": "1.10.0"
+    "morgan": "1.10.0",
+    "playwright": "1.42.1"
   },
   "eslintConfig": {
     "extends": [

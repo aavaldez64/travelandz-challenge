@@ -1,26 +1,60 @@
 import { Request, Response } from "express";
 import { fetchHotelBedsAPI } from "../../config";
-import type {
-  AvailabilityResponse,
-  BookingResponse,
-  RequestBookingBody,
-  RequestBookingResponse,
-} from "../../domain/interfaces";
 import { CustomError } from "../../domain/errors";
+import { TransfersRepositoryInterface } from "../../domain/repositories";
 import {
   CheckSimpleAvailableTransfersDto,
   GetBookingsDto,
   RequestBookingBodyDto,
 } from "../../domain/dtos";
 import { parseSimpleAvailabilityURL } from "./mappers/simple-availability.mapper";
-import {
-  BookingInterface,
-  BookingModel,
-} from "../../data/mongodb/models/bookings.model";
-import { FilterQuery } from "mongoose";
+import type {
+  AvailabilityResponse,
+  BookingResponse,
+  HotelCode,
+  RequestBookingBody,
+  RequestBookingResponse,
+} from "../../domain/interfaces";
 
 export class TransfersController {
-  constructor() {}
+  constructor(
+    private readonly transfersRepository: TransfersRepositoryInterface,
+  ) {}
+
+  getAirportCodes = async (req: Request, res: Response) => {
+    const { keyword } = req.query;
+    if (keyword && typeof keyword !== "string") {
+      return res.status(404).send({ message: "Bad request | keyword" });
+    }
+    const iataCodes = await this.transfersRepository.getIataCodes(keyword);
+    res.send({ iataCodes });
+  };
+
+  getHotelCodes = async (req: Request, res: Response) => {
+    const { destinationCode, keyword } = req.query;
+    const request = await fetchHotelBedsAPI.get(
+      `/transfer-cache-api/1.0/hotels?fields=name,code,description,countryCode,city&language=es&destinationCodes=${destinationCode}`,
+    );
+    try {
+      const data: HotelCode[] = await request.json();
+      if (!request.ok) {
+        throw CustomError.internalServer(data);
+      }
+      if (keyword && typeof keyword === "string") {
+        // console.log(keyword);
+        const keywordRegExp = new RegExp(keyword, "i");
+
+        const filteredData = data.filter(element =>
+          keywordRegExp.test(element.name),
+        );
+        return res.send({ data: filteredData });
+      }
+      res.send({ data: data });
+    } catch (error) {
+      console.log(error);
+      res.send({ data: [] });
+    }
+  };
 
   checkSimpleAvailability = async (req: Request, res: Response) => {
     const [error, checkSimpleAvailableTransfersDto] =
@@ -30,19 +64,23 @@ export class TransfersController {
     const fetchURL = parseSimpleAvailabilityURL(
       checkSimpleAvailableTransfersDto,
     );
-    const request = await fetchHotelBedsAPI.get(fetchURL);
-    if (request.status === 204) {
-      return res.send({ data: [] });
-    }
-    const data = await request.json();
-    if (request.status !== 200) {
-      console.log(data);
-      throw CustomError.badRequest(data.message ?? "Bad request");
-    }
-    // data as AvailabilityResponse;
+    try {
+      const request = await fetchHotelBedsAPI.get(fetchURL);
+      if (request.status === 204) {
+        return res.send({ data: [] });
+      }
+      const data = await request.json();
+      if (request.status !== 200) {
+        throw CustomError.badRequest(data.message ?? "Bad request");
+      }
+      // data as AvailabilityResponse;
 
-    const transfersData = data as AvailabilityResponse;
-    res.send({ data: transfersData.services });
+      const transfersData = data as AvailabilityResponse;
+      res.send({ data: transfersData.services });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ data: "Internal server error" });
+    }
   };
 
   requestSimpleBooking = async (req: Request, res: Response) => {
@@ -88,17 +126,19 @@ export class TransfersController {
       welcomeMessage: welcomeMessage,
       remark: remark,
     };
-    const request = await fetchHotelBedsAPI.post("/bookings", body);
+    const request = await fetchHotelBedsAPI.post(
+      "transfer-api/1.0/bookings",
+      body,
+    );
     if (request.status === 200) {
       const data: RequestBookingResponse = await request.json();
       try {
         const dataBooking = data.bookings[0];
-        const booking = await BookingModel.create({
+        const booking = await this.transfersRepository.createSimpleBooking({
           ...dataBooking,
           date: dataBooking.transfers[0].pickupInformation.date,
           user: user.id,
         });
-        await booking.save();
         return res.send(booking);
       } catch (error) {
         console.log(error);
@@ -114,31 +154,17 @@ export class TransfersController {
     const [error, getBookingsDto] = GetBookingsDto.create(req.query);
     if (error !== null) return res.status(400).send({ message: error });
 
+    // @ts-ignore
     const user = req.user!;
-    const { language, fromDate, toDate, dateType, page, limit } =
-      getBookingsDto;
-
-    const findQuery: FilterQuery<BookingInterface> = { user: user.id };
-    if (fromDate) {
-      findQuery.date ??= {};
-      findQuery.date.$gte = new Date(fromDate);
-    }
-    if (toDate) {
-      findQuery.date ??= {};
-      findQuery.date.$lte = new Date(toDate);
-    }
-    const totalBookings = await BookingModel.countDocuments(findQuery);
-    const userBookings = await BookingModel.find(findQuery)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate(["user", { path: "user", select: "-password" }]);
+    const { data, currentPage, totalPages } =
+      await this.transfersRepository.getBookingList(user.id, getBookingsDto);
     return res.send({
-      data: userBookings,
-      currentPage: page,
-      totalPages: Math.ceil(totalBookings / limit),
+      data: data,
+      currentPage: currentPage,
+      totalPages: totalPages,
     });
     // const request = await fetchHotelBedsAPI.get(
-    //   `/bookings/${language}?fromDate=${fromDate}&toDate=${toDate}&dateType=${dateType}&offset=${offset}&limit=${limit}`,
+    //   `transfer-api/1.0/bookings/${language}?fromDate=${fromDate}&toDate=${toDate}&dateType=${dateType}&offset=${offset}&limit=${limit}`,
     // );
     // if (request.status === 200) {
     //   const data: BookingResponse = await request.json();
@@ -149,7 +175,9 @@ export class TransfersController {
 
   getBookingDetails = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const request = await fetchHotelBedsAPI.get(`/bookings/es/reference/${id}`);
+    const request = await fetchHotelBedsAPI.get(
+      `transfer-api/1.0/bookings/es/reference/${id}`,
+    );
     if (request.status === 200) {
       const data: BookingResponse = await request.json();
       return res.send(data.bookings[0]);
@@ -159,20 +187,13 @@ export class TransfersController {
   cancelBooking = async (req: Request, res: Response) => {
     const { id } = req.params;
     const request = await fetchHotelBedsAPI.delete(
-      `/bookings/en/reference/${id}`,
+      `transfer-api/1.0/bookings/en/reference/${id}`,
     );
     if (request.status === 200) {
-      const data: BookingResponse = await request.json();
-      const booking = await BookingModel.findOne({ reference: id });
       try {
-        if (booking) {
-          booking.status = "CANCELLED";
-          if (booking.transfers[0]) booking.transfers[0].status = "CANCELLED";
-          await booking.save();
-          // return res.send(data.bookings[0]);
-          return res.send(booking);
-        }
-        throw CustomError.internalServer("Internal server error");
+        // const data: BookingResponse = await request.json();
+        const booking = await this.transfersRepository.cancelBooking(id);
+        return res.send(booking);
       } catch (error) {
         console.log(error);
         return res.status(500).send({ message: "Internal server error" });

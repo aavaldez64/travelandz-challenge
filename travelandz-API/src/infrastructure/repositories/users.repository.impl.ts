@@ -1,4 +1,4 @@
-import { UsersDatasourceInterface } from "../../domain/datasources/users.datasource";
+import { UsersDatasourceInterface } from "../../domain/datasources";
 import { FindUserDto, UpdateUserDto } from "../../domain/dtos";
 import { UserEntity } from "../../domain/entities";
 import { UsersRepositoryInterface } from "../../domain/repositories";

@@ -1,13 +1,18 @@
 import { Router } from "express";
 import { TransfersController } from "./controller";
-import { AuthMiddleware } from "../middlewares/auth.middleware";
-import { Roles } from "../../domain/entities";
+import { TransfersDatasource, TransfersRepository } from "../../infrastructure";
 
 export class TransfersRoutes {
   static get routes(): Router {
     const router = Router();
-    const controller = new TransfersController();
 
+    const datasource = new TransfersDatasource();
+    const transfersRepository = new TransfersRepository(datasource);
+
+    const controller = new TransfersController(transfersRepository);
+
+    router.get("/airport-codes", controller.getAirportCodes);
+    router.get("/hotel-codes", controller.getHotelCodes);
     router.get(
       "/check-availability/simple",
       controller.checkSimpleAvailability,

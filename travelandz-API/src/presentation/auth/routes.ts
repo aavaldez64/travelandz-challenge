@@ -7,11 +7,11 @@ export class AuthRoutes {
   static get routes(): Router {
     const router = Router();
 
-    const database = new AuthDatasource(
+    const datasource = new AuthDatasource(
       BcryptAdapter.hash,
       BcryptAdapter.compare,
     );
-    const authRepository = new AuthRepository(database);
+    const authRepository = new AuthRepository(datasource);
 
     const controller = new AuthController(authRepository);
 

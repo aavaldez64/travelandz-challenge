@@ -34,6 +34,7 @@ export class AuthMiddleware {
           return res.status(401).json({ message: "Unauthorized" });
         }
 
+        // @ts-ignore
         req.user = user;
         next();
       } catch (error) {

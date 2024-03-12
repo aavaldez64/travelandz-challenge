@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import type { UserInterface } from "./user.model";
 import type {
   BookingStatus,
@@ -8,7 +8,7 @@ import type {
 } from "../../../domain/interfaces";
 
 const StatusEnum: BookingStatus[] = ["CANCELLED", "CONFIRMED"];
-export interface BookingInterface {
+export interface CreateBookingInterface {
   reference: string;
   date: string;
   status: BookingStatus;
@@ -23,6 +23,7 @@ export interface BookingInterface {
   currency: string;
   paymentDataRequired: boolean;
 }
+export interface BookingInterface extends CreateBookingInterface, Document {}
 const bookingSchema = new Schema(
   {
     reference: {

@@ -1,0 +1,63 @@
+{
+  "iataCodes": [
+    { "cityAirport": "Alicante", "country": "Spain", "code": "ALC" },
+    { "cityAirport": "Almeria", "country": "Spain", "code": "LEI" },
+    { "cityAirport": "Arrecife/Lanzarote", "country": "Spain", "code": "ACE" },
+    { "cityAirport": "Badajoz", "country": "Spain", "code": "BJZ" },
+    { "cityAirport": "Barcelona", "country": "Spain", "code": "BCN" },
+    { "cityAirport": "Bilbao", "country": "Spain", "code": "BIO" },
+    { "cityAirport": "Cordoba", "country": "Spain", "code": "ODB" },
+    { "cityAirport": "Fuerteventura", "country": "Spain", "code": "FUE" },
+    { "cityAirport": "Gerona", "country": "Spain", "code": "GRO" },
+    { "cityAirport": "Granada", "country": "Spain", "code": "GRX" },
+    { "cityAirport": "Ibiza", "country": "Ibiza/Spain", "code": "IBZ" },
+    {
+      "cityAirport": "Jerez de la Frontera/Cadiz - La Parra",
+      "country": "Spain",
+      "code": "XRY"
+    },
+    { "cityAirport": "La Coruna", "country": "Spain", "code": "LCG" },
+    { "cityAirport": "Las Palmas", "country": "Spain", "code": "LPA" },
+    {
+      "cityAirport": "Madrid - Barajas Airport",
+      "country": "Spain",
+      "code": "MAD"
+    },
+    { "cityAirport": "Mahon", "country": "Spain", "code": "MAH" },
+    { "cityAirport": "Malaga", "country": "Spain", "code": "AGP" },
+    { "cityAirport": "Murcia", "country": "Spain", "code": "MJV" },
+    { "cityAirport": "Oviedo", "country": "Spain", "code": "OVD" },
+    { "cityAirport": "Palma de Mallorca", "country": "Spain", "code": "PMI" },
+    { "cityAirport": "Reus", "country": "Spain", "code": "REU" },
+    { "cityAirport": "San Sebastian", "country": "Spain", "code": "EAS" },
+    {
+      "cityAirport": "Santa Cruz de la Palma",
+      "country": "Spain",
+      "code": "SPC"
+    },
+    { "cityAirport": "Santander", "country": "Spain", "code": "SDR" },
+    {
+      "cityAirport": "Santiago de Compostela",
+      "country": "Spain",
+      "code": "SCQ"
+    },
+    { "cityAirport": "Sevilla", "country": "Spain", "code": "SVQ" },
+    { "cityAirport": "Tenerife", "country": "Spain", "code": "TCI" },
+    {
+      "cityAirport": "Tenerife - Sur Reina Sofia",
+      "country": "Spain",
+      "code": "TFS"
+    },
+    {
+      "cityAirport": "Tenerife - Norte Los Rodeos",
+      "country": "Spain",
+      "code": "TFN"
+    },
+    { "cityAirport": "Valencia", "country": "Spain", "code": "VLC" },
+    { "cityAirport": "Valladolid", "country": "Spain", "code": "VLL" },
+    { "cityAirport": "Valverde", "country": "Spain", "code": "VDE" },
+    { "cityAirport": "Vigo", "country": "Spain", "code": "VGO" },
+    { "cityAirport": "Vitoria", "country": "Spain", "code": "VIT" },
+    { "cityAirport": "Zaragoza", "country": "Spain", "code": "ZAZ" }
+  ]
+}

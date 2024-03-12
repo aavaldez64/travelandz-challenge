@@ -39,7 +39,7 @@ export interface RequestedBooking {
 interface Transfer {
   id: number;
   rateKey: string;
-  status: string;
+  status: BookingStatus;
   transferType: RequestedTransferType;
   vehicle: Category;
   category: Category;
