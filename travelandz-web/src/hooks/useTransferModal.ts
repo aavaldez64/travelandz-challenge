@@ -27,28 +27,32 @@ export function useTransferModal({ data, onClose }: Props) {
       Swal.fire({
         didOpen: () => Swal.showLoading(),
       });
-      const response = await ActionBookTransfer({
-        language: "es",
-        rateKey: data.rateKey,
-        // @ts-ignore
-        // transferType: data.transferType,
-        transferType: "FLIGHT",
-        transferDirection: data.direction,
-        welcomeMessage: "",
-        remark: "",
-      });
-      if (response.ok) {
-        onClose();
-        await Swal.fire({
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
+      try {
+        const response = await ActionBookTransfer({
+          language: "es",
+          rateKey: data.rateKey,
+          // @ts-ignore
+          // transferType: data.transferType,
+          transferType: "FLIGHT",
+          transferDirection: data.direction,
+          welcomeMessage: "",
+          remark: "",
         });
-        router.push("/bookings");
-      } else {
+        if (response.ok) {
+          onClose();
+          await Swal.fire({
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          router.push("/bookings");
+        } else {
+          throw new Error(response.data?.message || "Unknown error");
+        }
+      } catch (error: any) {
         await Swal.fire({
           icon: "error",
-          title: response.data?.message || "Unknown error",
+          title: error.message || "Unknown error",
           timer: 2000,
           showConfirmButton: false,
         });
