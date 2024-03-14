@@ -2,9 +2,12 @@ import { fetchApiAdapter } from "@/adapters/fetch-api/adapter";
 import { parseQueryParams } from "@/utils";
 import type {
   AirportCodesResponse,
+  BookingData,
+  BookingListResponse,
   GetBookingsProps,
   HotelCodesResponse,
   RequestSimpleBookingProps,
+  TransferAvailabilityDetails,
   TransfersAvailabilityProps,
 } from "@/interfaces";
 
@@ -33,9 +36,10 @@ export class TransfersService {
     getBookingProps: GetBookingsProps
   ) {
     const params = parseQueryParams(getBookingProps);
-    const response = await fetchApi.get("/transfers/booking" + params);
-    console.log(response);
-    return response.data;
+    const response = await fetchApi.get<BookingListResponse>(
+      "/transfers/booking" + params
+    );
+    return response.data as BookingListResponse;
   }
 
   static async getBookingByRef(fetchApi: fetchApiAdapter, reference: string) {
@@ -53,20 +57,22 @@ export class TransfersService {
     transfersAvailabilityProps: TransfersAvailabilityProps
   ) {
     const params = parseQueryParams(transfersAvailabilityProps);
-    const response = await fetchApi.get(
-      "/transfers/check-availability/simple" + params
-    );
-    console.log(response);
-    return response.data;
+    const response = await fetchApi.get<{
+      data: TransferAvailabilityDetails[];
+    }>("/transfers/check-availability/simple" + params);
+    return response;
   }
 
   static async requestSimpleBooking(
     fetchApi: fetchApiAdapter,
     requestSimpleBookingProps: RequestSimpleBookingProps
   ) {
-    const response = await fetchApi.post("/transfers/booking/request-simple", {
-      data: requestSimpleBookingProps,
-    });
+    const response = await fetchApi.post<BookingData>(
+      "/transfers/booking/request-simple",
+      {
+        data: requestSimpleBookingProps,
+      }
+    );
     return response;
   }
 }

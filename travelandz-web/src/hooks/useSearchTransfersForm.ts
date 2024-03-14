@@ -6,7 +6,13 @@ import {
   ActionGetHotelCodes,
   ActionGetTransfersAvailability,
 } from "@/actions/transfer.actions";
-import { HotelCode, IATACode, TransfersAvailabilityProps } from "@/interfaces";
+import { useTransferListStore } from "@/stores";
+import type {
+  HotelCode,
+  IATACode,
+  TransfersAvailabilityProps,
+} from "@/interfaces";
+import Swal from "sweetalert2";
 
 interface Props {
   airportCodes: IATACode[];
@@ -29,6 +35,12 @@ interface FormBodyProps {
 }
 
 export function useSearchTransfersForm() {
+  const isSearching = useTransferListStore((store) => store.isSearching);
+  const setIsSearching = useTransferListStore((store) => store.setIsSearching);
+  const setTransferList = useTransferListStore(
+    (store) => store.setTransferList
+  );
+  const [searchingHotels, setSearchingHotels] = useState(false);
   const [formBody, setFormBody] = useState<FormBodyProps>({
     airportCode: "",
     airportName: "",
@@ -42,7 +54,7 @@ export function useSearchTransfersForm() {
     routeType: RouteType.airportToHotel,
   });
   const [hotelCodes, setHotelCodes] = useState<HotelCode[]>([]);
-  const [hotelCodeKeyword, setHotelCodeKeyword] = useState("");
+  const [hotelCodeKeyword, setHotelCodeKeyword] = useState<null | string>(null);
   const routeData = useMemo(() => {
     if (formBody.routeType === RouteType.airportToHotel) {
       return {
@@ -70,13 +82,16 @@ export function useSearchTransfersForm() {
     formBody.hotelName,
   ]);
 
-  const getHotelCodes = useDebouncedCallback(async () => {
-    const hotelCodesResponse = await ActionGetHotelCodes(
-      formBody.airportCode,
-      hotelCodeKeyword
+  const getHotelCodes = useDebouncedCallback(() => {
+    if (hotelCodeKeyword === null) return;
+    setSearchingHotels(true);
+    ActionGetHotelCodes(formBody.airportCode, hotelCodeKeyword).then(
+      (response) => {
+        setHotelCodes(response.data);
+        setSearchingHotels(false);
+      }
     );
-    setHotelCodes(hotelCodesResponse.data);
-  }, 400);
+  }, 300);
 
   const InterchangeRouteType = () => {
     if (formBody.routeType === RouteType.airportToHotel) {
@@ -92,7 +107,7 @@ export function useSearchTransfersForm() {
     setHotelCodeKeyword(event.target.value);
   };
   const resetHotelKeyword = () => {
-    setHotelCodeKeyword(formBody.hotelName);
+    setHotelCodeKeyword(null);
   };
   const handleOnChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -106,11 +121,14 @@ export function useSearchTransfersForm() {
       ...prev,
       airportCode: code,
       airportName: cityAirport,
+      hotelCode: "",
+      hotelName: "",
     }));
+    resetHotelKeyword();
   };
   const handleOnChangeHotel = (data: HotelCode) => {
     const { code, name } = data;
-    setHotelCodeKeyword(name);
+    resetHotelKeyword();
     setFormBody((prev) => ({
       ...prev,
       hotelCode: code,
@@ -128,6 +146,56 @@ export function useSearchTransfersForm() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSearching) return;
+    if (!formBody.airportCode) {
+      Swal.fire({
+        icon: "error",
+        title: "Debes seleccionar un aeropuerto",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+    if (!formBody.hotelCode) {
+      Swal.fire({
+        icon: "error",
+        title: "Debes seleccionar un hotel",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+    if (
+      formBody.adults === 0 &&
+      formBody.children === 0 &&
+      formBody.infants === 0
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Debes añadir al menos 1 pasajero",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+    if (formBody.outBound === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Fecha inválida",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+    if (new Date(formBody.outBound + " 23:59").getTime() < Date.now()) {
+      Swal.fire({
+        icon: "error",
+        title: "La fecha de salida no puede ser anterior a la de hoy",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
     const queryData: TransfersAvailabilityProps = {
       fromType: routeData.fromType,
       fromCode: routeData.fromCode,
@@ -141,20 +209,36 @@ export function useSearchTransfersForm() {
       infants: formBody.infants,
     };
     if (formBody.inBound) {
+      if (
+        new Date(formBody.outBound).getTime() >
+        new Date(formBody.inBound).getTime()
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "La fecha de regreso no puede ser anterior a la de salida",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return;
+      }
       queryData.inBound = new Date(formBody.inBound).toISOString();
     }
-    // console.log(queryData);
+    setIsSearching(true);
     const response = await ActionGetTransfersAvailability(queryData);
-    console.log(response);
+    setTransferList(response.data);
+    setIsSearching(false);
   };
 
   useEffect(() => {
     if (!formBody.airportCode) return;
-    if (hotelCodeKeyword.length <= 3) return;
+    if (hotelCodeKeyword === null || hotelCodeKeyword.length <= 3) return;
     if (hotelCodeKeyword === formBody.hotelName) return;
     getHotelCodes();
   }, [formBody.airportCode, , formBody.hotelName, hotelCodeKeyword]);
+
   return {
+    isSearching,
+    searchingHotels,
     formBody,
     hotelCodes,
     hotelCodeKeyword,

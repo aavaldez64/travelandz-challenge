@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="w-full bg-slate-500 text-white">
-      <div className="mx-auto w-full max-w-[1600px] p-8 text-white">
+      <div className="lg:mx-auto w-full max-w-[1600px] px-2 py-8 text-white">
         <p className="text-center w-full">
           <strong className="font-bold text-base">Travelandz Web.</strong>{" "}
           <small className="text-base">

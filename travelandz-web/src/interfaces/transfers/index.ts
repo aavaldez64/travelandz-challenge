@@ -22,12 +22,16 @@ export interface TransfersAvailabilityProps {
   children: number;
   infants: number;
 }
+export interface TransferAvailability {}
+
+export type TransferType = "FLIGHT" | "CRUISE" | "TRAIN";
+export type TransferDirection = "ARRIVAL" | "DEPARTURE";
 
 export interface RequestSimpleBookingProps {
   language: string;
   rateKey: string;
-  transferType: "FLIGHT" | "CRUISE" | "TRAIN";
-  transferDirection: "ARRIVAL" | "DEPARTURE";
+  transferType: TransferType;
+  transferDirection: TransferDirection;
   welcomeMessage: string;
   remark: string;
 
@@ -53,3 +57,7 @@ export interface HotelCode {
   countryCode: string;
   city: string;
 }
+
+export * from "./transfers-availability.interface";
+export * from "./booking-data.interface";
+export * from "./booking-list.interface";

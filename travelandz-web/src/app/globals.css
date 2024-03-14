@@ -21,6 +21,12 @@ select,
   transition-colors duration-200 ease-in-out;
 }
 
+hr {
+  @apply my-4 border-t-2;
+}
+.clickable {
+  @apply cursor-pointer hover:opacity-70 transition-opacity duration-300 ease-in-out;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={montserrat.className + " min-h-screen w-screen"}>
+      <body className={montserrat.className + " min-h-screen w-full"}>
         {children}
       </body>
     </html>

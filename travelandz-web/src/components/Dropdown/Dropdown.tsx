@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { Icons } from "@/icons";
 
 interface DropdownProps extends React.PropsWithChildren {
-  label?: string | React.ReactNode;
+  label: string | React.ReactNode;
   buttonFunction?: "open" | "toggle";
   onFocusOut?: () => void;
   className?: string;
@@ -53,9 +54,6 @@ export function Dropdown({
       {dropdownOpen && (
         <div
           aria-expanded={dropdownOpen}
-          onClick={() => {
-            setDropdownOpen(false);
-          }}
           className={clsx(
             "w-full min-w-36 absolute rounded divide-y divide-gray-100 shadow focus:outline-none transition-opacity duration-100 border border-gray-200 bg-white text-gray-900 z-20",
             placement === "down" && "top-full left-0",
@@ -71,17 +69,33 @@ export function Dropdown({
     </div>
   );
 }
+
 interface SelectDropdownProps
   extends Omit<DropdownProps, "containerClassName"> {}
-export function SelectDropdown({ children, ...props }: SelectDropdownProps) {
+export function SelectDropdown({
+  children,
+  label,
+  ...props
+}: SelectDropdownProps) {
   return (
-    <Dropdown {...props} containerClassName="select">
+    <Dropdown
+      {...props}
+      containerClassName="select"
+      className="w-full"
+      label={
+        <div className="relative flex w-full items-center gap-2">
+          {label}
+          <Icons.SelectArrow className="absolute right-0" />
+        </div>
+      }
+    >
       <ul className="max-h-96 overflow-y-auto [&>li]:p-1 [&>li]:cursor-pointer [&>li:hover]:bg-gray-500 [&>li:hover]:text-white">
         {children}
       </ul>
     </Dropdown>
   );
 }
+
 interface SelectDropdownWithTextBoxProps
   extends Omit<
     DropdownProps,
@@ -93,7 +107,7 @@ interface SelectDropdownWithTextBoxProps
   > {
   value: string;
   placeholder?: string;
-  inputText: string;
+  inputText: string | null;
   handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetFunction: () => void;
 }
@@ -120,7 +134,7 @@ export function SelectDropdownWithTextBox({
           className="w-full"
           type="text"
           placeholder={placeholder}
-          value={inputText}
+          value={inputText ?? value}
           onChange={handleOnChange}
         />
       }

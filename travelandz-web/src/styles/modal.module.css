@@ -1,0 +1,9 @@
+.modalBody {
+  transition: opacity 0.3s ease-in-out;
+  z-index: 999;
+  @apply fixed opacity-100 inset-0 flex items-center justify-center w-full h-full bg-black/20 px-6;
+}
+
+.modalClosed {
+  @apply opacity-0 invisible;
+}

@@ -32,3 +32,7 @@ export async function ActionRegister(registerUserProps: RegisterUserProps) {
   };
   return await ActionLogin(credentials);
 }
+export async function ActionVerifyToken() {
+  const response = await AuthService.verifyToken(TRAVELANDZ_API);
+  return { authenticated: response.ok };
+}

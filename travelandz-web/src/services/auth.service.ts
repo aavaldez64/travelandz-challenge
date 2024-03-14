@@ -28,4 +28,8 @@ export class AuthService {
     );
     return response;
   }
+  static async verifyToken(fetchApi: fetchApiAdapter) {
+    const response = await fetchApi.get("/auth/verify-token");
+    return response;
+  }
 }

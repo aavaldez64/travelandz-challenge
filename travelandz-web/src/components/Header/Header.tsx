@@ -21,9 +21,11 @@ interface Props {
 export function Header({ username }: Props) {
   return (
     <header className="w-full bg-gradient-to-r from-sky-600 to-sky-800">
-      <div className="mx-auto w-full max-w-[1600px] p-8 flex justify-between gap-6">
-        <p className="font-semibold text-lg text-white">Hola {username}!</p>
-        <ul className="flex justify-end gap-6 text-white">
+      <div className="mx-auto w-full max-w-[1600px] p-8 flex flex-col lg:flex-row lg:justify-between gap-6">
+        <p className="font-semibold text-lg text-white text-center lg:text-start">
+          Hola {username}!
+        </p>
+        <ul className="flex flex-col lg:flex-row lg:justify-end gap-6 text-white">
           {links.map((item) => (
             <li key={item.href}>
               <HeaderLink {...item} />
