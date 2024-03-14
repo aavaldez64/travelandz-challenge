@@ -4,7 +4,7 @@ Este es el backend para la aplicación del desafío de Travelandz. Ha sido desar
 
 # Requisitos
 
-- NodeJS v.18 o superior
+- NodeJS v20
 - Docker
 - MongoDB docker image:
 
@@ -56,6 +56,24 @@ $ pnpm iata-codes:seed
 
 ```bash
 $ pnpm dev
+```
+
+# Iniciar en producción
+
+1. Instalar las dependencias
+2. Generar build de producción
+
+```bash
+$ pnpm build
+```
+
+3. Iniciar servidor a partir del build de producción
+
+```bash
+$ pnpm start
+
+# O generar el build e iniciar en un solo comando
+$ pnpm build:start
 ```
 
 # Utils
