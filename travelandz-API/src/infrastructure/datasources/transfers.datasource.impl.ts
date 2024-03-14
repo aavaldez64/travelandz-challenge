@@ -33,11 +33,11 @@ export class TransfersDatasource implements TransfersDatasourceInterface {
     const findQuery: FilterQuery<BookingInterface> = { user: userId };
     if (fromDate) {
       findQuery.date ??= {};
-      findQuery.date.$gte = new Date(fromDate);
+      findQuery.date.$gte = new Date(fromDate + " 00:00:00");
     }
     if (toDate) {
       findQuery.date ??= {};
-      findQuery.date.$lte = new Date(toDate);
+      findQuery.date.$lte = new Date(toDate + " 23:59:59");
     }
     const totalBookings = await BookingModel.countDocuments(findQuery);
     const userBookings = await BookingModel.find(findQuery)

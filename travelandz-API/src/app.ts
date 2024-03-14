@@ -1,15 +1,7 @@
 import { envs } from "./config";
-import { MongoDatabase, type UserInterface } from "./data/mongodb";
+import { MongoDatabase } from "./data/mongodb";
 import { AppRoutes } from "./presentation/routes";
 import { Server } from "./presentation/server";
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: UserInterface;
-    }
-  }
-}
 
 async function main() {
   await MongoDatabase.connect({

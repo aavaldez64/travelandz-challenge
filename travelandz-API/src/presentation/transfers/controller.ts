@@ -126,13 +126,13 @@ export class TransfersController {
       welcomeMessage: welcomeMessage,
       remark: remark,
     };
-    const request = await fetchHotelBedsAPI.post(
-      "transfer-api/1.0/bookings",
-      body,
-    );
-    if (request.status === 200) {
-      const data: RequestBookingResponse = await request.json();
-      try {
+    try {
+      const request = await fetchHotelBedsAPI.post(
+        "/transfer-api/1.0/bookings",
+        body,
+      );
+      if (request.status === 200) {
+        const data: RequestBookingResponse = await request.json();
         const dataBooking = data.bookings[0];
         const booking = await this.transfersRepository.createSimpleBooking({
           ...dataBooking,
@@ -140,14 +140,14 @@ export class TransfersController {
           user: user.id,
         });
         return res.send(booking);
-      } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: "Internal Server Error" });
       }
+      const data = await request.json();
+      // console.log(data);
+      res.status(400).send({ message: "Bad Request", data });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Internal Server Error" });
     }
-    const data = await request.json();
-    // console.log(data);
-    res.status(400).send({ message: "Bad Request", data });
   };
 
   getBookingList = async (req: Request, res: Response) => {
@@ -176,7 +176,7 @@ export class TransfersController {
   getBookingDetails = async (req: Request, res: Response) => {
     const { id } = req.params;
     const request = await fetchHotelBedsAPI.get(
-      `transfer-api/1.0/bookings/es/reference/${id}`,
+      `/transfer-api/1.0/bookings/es/reference/${id}`,
     );
     if (request.status === 200) {
       const data: BookingResponse = await request.json();
@@ -187,7 +187,7 @@ export class TransfersController {
   cancelBooking = async (req: Request, res: Response) => {
     const { id } = req.params;
     const request = await fetchHotelBedsAPI.delete(
-      `transfer-api/1.0/bookings/en/reference/${id}`,
+      `/transfer-api/1.0/bookings/en/reference/${id}`,
     );
     if (request.status === 200) {
       try {
