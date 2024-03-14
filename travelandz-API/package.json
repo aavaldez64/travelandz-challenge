@@ -8,6 +8,7 @@
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
     "build:start": "pnpm build && pnpm start",
+    "build:prod": "tsc",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "iata-codes": "ts-node src/data/iata-codes/iata-codes.ts",
