@@ -1,4 +1,5 @@
 import { DtoResponse } from "../../interfaces";
+import { Validators } from "../../../config/validators";
 
 export class GetBookingsDto {
   constructor(
@@ -11,22 +12,26 @@ export class GetBookingsDto {
   ) {}
   static create(props: Record<string, any>): DtoResponse<GetBookingsDto> {
     const errors: string[] = [];
+    const defaultDate = new Date().toISOString().split("T")[0];
     const {
       language = "es",
-      fromDate,
-      toDate,
+      fromDate = defaultDate,
+      toDate = defaultDate,
       dateType = "FROM_DATE",
       page = "1",
       limit = "20",
     } = props;
-
-    if (!fromDate) errors.push("fromDate is required");
-    if (!toDate) errors.push("toDate is required");
-
-    if (new Date(fromDate).toDateString() === "Invalid Date") {
+    // if (!fromDate) errors.push("out bound is required");
+    if (fromDate && !Validators.isDateYYYYMMDD(fromDate))
+      errors.push("Invalid out bound. Must be YYYY-MM-DD");
+    if (fromDate && new Date(fromDate).toDateString() === "Invalid Date") {
       errors.push("Invalid out bound date");
     }
-    if (new Date(toDate).toDateString() === "Invalid Date") {
+
+    // if (!toDate) errors.push("in bound is required");
+    if (toDate && !Validators.isDateYYYYMMDD(toDate))
+      errors.push("Invalid in bound. Must be YYYY-MM-DD");
+    if (toDate && new Date(toDate).toDateString() === "Invalid Date") {
       errors.push("Invalid out bound date");
     }
     if (page && (isNaN(+page) || +page < 1)) {
@@ -42,8 +47,8 @@ export class GetBookingsDto {
       null,
       new GetBookingsDto(
         language,
-        new Date(fromDate).toISOString().split("T").at(0)!,
-        new Date(toDate).toISOString().split("T").at(0)!,
+        fromDate || "",
+        toDate || "",
         dateType,
         +page,
         +limit,
