@@ -30,10 +30,16 @@ export class AuthController {
     try {
       const user = await this.authRepository.login(loginUserDto);
       const token = await this.generateUserToken(user.id);
-      res.status(201).json({ user, token });
+      res.status(200).json({ user, token });
     } catch (error) {
       this.handleError(error, res);
     }
+  };
+
+  verifyToken = async (req: Request, res: Response) => {
+    // @ts-ignore
+    const userData = req.user;
+    return res.send({ user: userData });
   };
 
   private generateUserToken = (id: string) => {
